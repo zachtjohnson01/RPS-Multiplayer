@@ -14,7 +14,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Firebase Reference -->
-    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
 </head>
 <body>
     <div class='container'>
@@ -22,20 +22,28 @@
             <h1 class="text-center">Rock,Paper,Scissors</h1>
         </div>
 
-        <form class="form-inline text-center">
-            <div class="form-group mx-sm-3 mb-2">
-              <label for="inputPassword2" class="sr-only">Player Name</label>
-              <input type="password" class="form-control" placeholder="Player">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default text-center">
+                    <div class="panel-heading">
+                        <h3 class="panel-title name-panel">Your Team Name</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <form id="name-form">
+                                <input type="text" id="name-input">
+                                <input id="submit-name" type="submit" value="Submit"  class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary mb-2">Submit Name</button>
-          </form>
+        </div>
 
         <div class="row">
             <div class="col-sm-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-body text-center">
-                            Player 1
+                        <div class="panel-body text-center p1_name">
+                            <h1>Player 1</h1>
                         </div>
                     </div>
                 </div>
@@ -43,8 +51,8 @@
             <div class="col-sm-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-body text-center">
-                            Player 2
+                        <div class="panel-body text-center p2_name">
+                            <h1>Player 2</h1>
                         </div>
                     </div>
                 </div>
@@ -54,39 +62,39 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="panel panel-default">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <img class="img-responsive img-thumbnail pull-left rock_p1" src="assets/images/rock.gif" alt="rock">
+                    <div class="row choices1">
+                        <!-- <div class="col-sm-12">
+                            <img class="img-responsive img-thumbnail pull-left rock_p1" data-choice="rock" src="assets/images/rock.gif" alt="rock">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <img class="img-responsive img-thumbnail pull-left paper_p1" src="assets/images/paper.gif" alt="paper">
+                            <img class="img-responsive img-thumbnail pull-left paper_p1" data-choice="paper" src="assets/images/paper.gif" alt="paper">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <img class="img-responsive img-thumbnail pull-left scissors_p1" src="assets/images/scissors.gif" alt="scissors">
-                        </div>
+                            <img class="img-responsive img-thumbnail pull-left scissors_p1" data-choice="scissors" src="assets/images/scissors.gif" alt="scissors">
+                        </div> -->
                     </div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="panel panel-default">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <img class="img-responsive img-thumbnail pull-right rock_p2" src="assets/images/rock.gif" alt="rock">
+                    <div class="row choices2">
+                        <!-- <div class="col-sm-12">
+                            <img class="img-responsive img-thumbnail pull-right rock_p2" data-choice="rock" src="assets/images/rock.gif" alt="rock">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <img class="img-responsive img-thumbnail pull-right paper_p2" src="assets/images/paper.gif" alt="paper">
+                            <img class="img-responsive img-thumbnail pull-right paper_p2" data-choice="paper" src="assets/images/paper.gif" alt="paper">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <img class="img-responsive img-thumbnail pull-right scissors_p2" src="assets/images/scissors.gif" alt="scissors">
-                        </div>
+                            <img class="img-responsive img-thumbnail pull-right scissors_p2" data-choice="scissors" src="assets/images/scissors.gif" alt="scissors">
+                        </div> -->
                     </div>
                 </div>
             </div>
