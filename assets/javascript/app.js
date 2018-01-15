@@ -32,6 +32,7 @@ $(document).on('ready', function() {
 
   var game = {
     listeners: function() {
+      console.log('listeners function firing');
       database.ref().on('value', function(snapshot) {
         var turnVal = snapshot.child('turn').val();
         if (turnVal !== null && player == undefined) {
@@ -39,6 +40,7 @@ $(document).on('ready', function() {
         }
       });
       $('#submit-name').one('click', function() {
+        console.log('-----SUBMIT BUTTON SELECTED------')
         game.setPlayer();
         return false
       });
@@ -49,6 +51,13 @@ $(document).on('ready', function() {
         player_title.empty();
         var $h1 = $('<h2>').text(name[key]);
         player_title.append($h1);
+        var wins = childSnapshot.val().wins;
+        var losses = childSnapshot.val().losses;
+        var $wins = $('<h6>').text('Wins: ' + wins);
+        var $losses = $('<h6>').text('Losses: ' + losses);
+        $wins.addClass('pull-left');
+        $losses.addClass('pull-right');
+        $('.score' + key).append($wins).append($losses).append('<br><br>');
       });
       playersRef.on('child_removed', function(childSnapshot) {
         var key = childSnapshot.key;
@@ -60,15 +69,39 @@ $(document).on('ready', function() {
       turnRef.on('value', function(snapshot) {
         var turnNum = snapshot.val();
         if (turnNum == 1) {
+          $('.choices1').empty();
+          $('.results').empty();
+          $('.choices2').empty();
           game.turn1();
         } else if (turnNum == 2) {
           game.turn2();
         } else if (turnNum == 3) {
           game.turn3();
         }
+      });
+      playersRef.child(1).on('child_changed', function(childSnapshot) {
+        if (childSnapshot.key == 'wins') {
+          wins1 = childSnapshot.val();
+        } else if (childSnapshot.key == 'losses') {
+          losses1 = childSnapshot.val();
+        };
+        if (wins1 !== undefined) {
+          $('.score1 .pull-left').text('Wins: ' + wins1);
+          $('.score1 .pull-right').text('Losses: ' + losses1);
+        }
+      });
+      playersRef.child(2).on('child_changed', function(childSnapshot) {
+        if (childSnapshot.key == 'wins') {
+          wins2 = childSnapshot.val();
+        } else if (childSnapshot.key == 'losses') {
+          losses2 = childSnapshot.val();
+        };
+        $('.score2 .pull-left').text('Wins: ' + wins2);
+        $('.score2 .pull-right').text('Losses: ' + losses2);
       })
     },
     setPlayer: function() {
+      console.log('setPlayer function firing');
       database.ref().once('value', function(snapshot) {
         var playerObj = snapshot.child('playersRef');
         var num = playerObj.numChildren();
@@ -87,6 +120,7 @@ $(document).on('ready', function() {
       })
     },
     addPlayer: function(count) {
+      console.log('addPlayer function firing');
       var playerName = $("#name-input").val();
       var name_form = $("#name-form");
       var name_panel = $(".name-panel");
@@ -103,6 +137,7 @@ $(document).on('ready', function() {
       })
     },
     turnMessage: function(playTurn) {
+      console.log('turnMessage function firing');
       otherPlayer = player == 1 ? 2:1;
       if (playTurn == player) {
         $('h4').text("It's Your Turn!");
@@ -113,9 +148,10 @@ $(document).on('ready', function() {
       }
     },
     showChoice: function() {
+      console.log('showChoice function firing');
       for (i in choices) {
         var $i = $('<img>');
-        $i.attr('class','img-responsive img-thumbnail pull-left ' + choices[i] + '_p1');
+        $i.attr('class','img-thumbnail ' + choices[i] + '_p1');
         $i.attr('data-choice', choices[i]);
         $i.attr('alt', choices[i]);
         $i.attr('src','assets/images/' + choices[i] + '.gif');
@@ -124,12 +160,13 @@ $(document).on('ready', function() {
       $(document).one('click', 'img', game.setChoice);
     },
     setChoice: function() {
+      console.log('setChoice function firing');
       var selection = $(this).attr('data-choice');
       userRef.update({
         'choice': selection
       });
       var $i = $("<img>");
-      $i.attr('class', 'img-responsive img-thumbnail pull-left ' + selection + '_p1')
+      $i.attr('class', 'img-thumbnail ' + selection + '_p1')
       $i.attr('data-choice', selection);
       $i.attr('alt', selection);
       $i.attr('src','assets/images/' + selection + '.gif');
@@ -143,22 +180,26 @@ $(document).on('ready', function() {
     },
     rotateChoice:"",
     turn1: function() {
+      console.log('turn1 function firing');
       game.turnMessage(1);
       if (player == 1) {
         game.showChoice();
       }
     },
     turn2: function() {
+      console.log('turn2 function firing');
       game.turnMessage(2);
       if (player == 2) {
         game.showChoice();
       }
     },
     turn3: function() {
+      console.log('turn3 function firing');
       game.turnMessage(3);
       game.outcome();
     },
     outcome: function() {
+      console.log('outcome function firing');
       playersRef.once('value', function(snapshot) {
         var snap1 = snapshot.val()[1];
         var snap2 = snapshot.val()[2];
@@ -170,12 +211,89 @@ $(document).on('ready', function() {
         losses2 = snap2.losses;
         var textChoice = otherPlayer == 1 ? choice1:choice2;
         var $i = $('<img>');
-        // LEFT OFF HERE-------------------------------------------------------------
+        $i.attr('class',' img-thumbnail ' + textChoice + '_p1');
+        $i.attr('data-choice', textChoice);
+        $i.attr('alt', textChoice);
+        $i.attr('src', 'assets/images/' + textChoice + '.gif');
+        $('.choices' + otherPlayer).append($i);
+        game.choiceAnimation();
       })
     },
-    logic:"",
-    winner:"",
-    choiceAnimation:""
+    logic: function() {
+      console.log('logic function firing');
+      if (choice1 == choice2) {
+        game.winner(0);
+      } else if (choice1 == 'rock') {
+        if (choice2 == 'paper') {
+          game.winner(2);
+        } else if (choice2 == 'scissors') {
+          game.winner(1);
+        }
+      } else if (choice1 == 'paper') {
+        if (choice2 == 'rock') {
+          game.winner(1);
+        } else if (choice2 == 'scissors') {
+          game.winner(2);
+        }
+      } else if (choice1 == 'scissors') {
+        if (choice2 == 'rock') {
+          game.winner(2);
+        } else if (choice2 == 'paper') {
+          game.winner(1);
+        }
+      }
+    },
+    winner: function(playerNum) {
+      console.log('winner function firing');
+      var results;
+      if (playerNum == 0) {
+        results = 'Tie!';
+      } else {
+        results = name[playerNum] + ' Wins!';
+        if (playerNum == 1)  {
+          wins = wins1;
+          losses = losses2;
+        } else {
+          wins = wins2;
+          losses = losses1;
+        }
+        wins++;
+        losses++;
+        var otherPlayerNum = playerNum ==1 ? 2:1;
+        $('.choices' + otherPlayerNum + ' > img').css('opacity','0.5');
+        window.setTimeout(function() {
+          playersRef.child(playerNum).update({
+            'wins': wins
+          });
+          playersRef.child(otherPlayerNum).update({
+            'losses': losses
+          });
+        }, 500);
+      }
+      window.setTimeout(function() {
+        console.log('css Animation step1');
+        $('.results').text(results).css('z-index','1');
+      }, 500);
+      window.setTimeout(function() {
+        console.log('css Animation step2');
+        turnRef.set(1);
+        $('.results').text('').css('z-index','-1');
+      }, 2000);
+    },
+    choiceAnimation:function() {
+      console.log('choiceAnimation function firing');
+      var $choice1 = $('.choices1 > img');
+      var $choice2 = $('.choices2 > img');
+      $choice1.addClass('animation-choice1');
+      $choice1.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function() {
+        $choice1.addClass('choice1-end');
+      });
+      $choice2.addClass('animation-choice2');
+      $choice2.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function() {
+        $choice2.addClass('choice2-end');
+        game.logic();
+      });
+    }
   };
 
   game.listeners();
