@@ -5,19 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Rock, Paper, Scissors</title>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
-    <!-- Bootstrap CDN-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-
-    <!-- Firebase Reference -->
-    <script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
 </head>
 <body>
     <div class='container'>
@@ -29,7 +16,12 @@
             <div class="col-lg-12">
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
-                        <h3 class="panel-title name-panel">Your Team Name</h3>
+                        <div class="panel-title name-panel">
+                            Your Team Name
+                            <div class='pull-right' id="watchers"></div>
+                            <div class='pull-right'>&nbsp</div>
+                            <img class='pull-right' src='assets/images/viewers.gif'>
+                        </div>
                     </div>
                     <div class="panel-body text-center">
                         <form id="name-form">
@@ -43,7 +35,7 @@
 
         <div class="row">
             <div class="col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default player1panel">
                     <div class="panel-heading">
                         <div class="panel-body text-center p1_name">
                             <h1>Player 1</h1>
@@ -58,9 +50,9 @@
                     </div>
                 </div>
             </div>
-            <div class="results"></div>
+            <div class="results" style="z-index: -1"></div>
             <div class="col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default player2panel">
                     <div class="panel-heading">
                         <div class="panel-body text-center p2_name">
                             <h1>Player 2</h1>
@@ -80,6 +72,18 @@
 
 
     </div>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Firebase Reference -->
+    <script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
     <script src="assets/javascript/app.js"></script>
 </body>
 </html>

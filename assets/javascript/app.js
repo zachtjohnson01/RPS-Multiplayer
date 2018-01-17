@@ -12,6 +12,7 @@ $(document).on('ready', function() {
   firebase.initializeApp(config);  
   var database = firebase.database();
   var presenceRef = database.ref(".info/connected");
+  var presenceNumRef = database.ref("/presenceNum");
   var playersRef = database.ref("/playersRef");
   var turnRef = database.ref("/turn");
   var chatRef = database.ref("/chat");
@@ -33,6 +34,16 @@ $(document).on('ready', function() {
   var game = {
     listeners: function() {
       console.log('listeners function firing');
+      presenceRef.on('value', function(snapshot){
+        if (snapshot.val()) {
+          var con = presenceNumRef.push(true);
+          con.onDisconnect().remove();
+          console.log(con);
+        }
+      });
+      presenceNumRef.on('value', function(snapshot){
+        $('#watchers').text(snapshot.numChildren());
+      })
       database.ref().on('value', function(snapshot) {
         var turnVal = snapshot.child('turn').val();
         if (turnVal !== null && player == undefined) {
@@ -93,6 +104,7 @@ $(document).on('ready', function() {
       playersRef.child(2).on('child_changed', function(childSnapshot) {
         if (childSnapshot.key == 'wins') {
           wins2 = childSnapshot.val();
+          console.log(wins2);
         } else if (childSnapshot.key == 'losses') {
           losses2 = childSnapshot.val();
         };
@@ -151,11 +163,12 @@ $(document).on('ready', function() {
       console.log('showChoice function firing');
       for (i in choices) {
         var $i = $('<img>');
-        $i.attr('class','img-thumbnail ' + choices[i] + '_p1');
+        $i.addClass('img-responsive ' + choices[i] + '_p1');
         $i.attr('data-choice', choices[i]);
         $i.attr('alt', choices[i]);
         $i.attr('src','assets/images/' + choices[i] + '.gif');
-        $('.choices' + player).append($i);
+        $('.choices' + player).append(`<div class='${choices[i]}-container tablecell'>`);
+        $(`.${choices[i]}-container`).append($i);
       };
       $(document).one('click', 'img', game.setChoice);
     },
@@ -166,11 +179,12 @@ $(document).on('ready', function() {
         'choice': selection
       });
       var $i = $("<img>");
-      $i.attr('class', 'img-thumbnail ' + selection + '_p1')
+      $i.addClass('img-responsive ' + selection + '_p1')
       $i.attr('data-choice', selection);
       $i.attr('alt', selection);
       $i.attr('src','assets/images/' + selection + '.gif');
-      $('.choices' + player).empty().append($i);
+      $('.choices' + player).empty().append(`<div class='${choices[i]}-container tablecell'>`);
+      $(`.${choices[i]}-container`).append($i);
       turnRef.once('value', function(snapshot) {
         var turnNum = snapshot.val();
         turnNum++;
@@ -201,9 +215,13 @@ $(document).on('ready', function() {
     outcome: function() {
       console.log('outcome function firing');
       playersRef.once('value', function(snapshot) {
+        console.log(snapshot.val());
         var snap1 = snapshot.val()[1];
+        console.log('snap1: ' + snap1);
         var snap2 = snapshot.val()[2];
+        console.log('snap2: ' + snap2);
         choice1 = snap1.choice;
+        console.log('choice1: ' + choice1);
         wins1 = snap1.wins;
         losses1 = snap1.losses;
         choice2 = snap2.choice;
@@ -211,7 +229,7 @@ $(document).on('ready', function() {
         losses2 = snap2.losses;
         var textChoice = otherPlayer == 1 ? choice1:choice2;
         var $i = $('<img>');
-        $i.attr('class',' img-thumbnail ' + textChoice + '_p1');
+        $i.addClass(textChoice + '_p1');
         $i.attr('data-choice', textChoice);
         $i.attr('alt', textChoice);
         $i.attr('src', 'assets/images/' + textChoice + '.gif');
@@ -256,10 +274,11 @@ $(document).on('ready', function() {
         } else {
           wins = wins2;
           losses = losses1;
-        }
+        };
         wins++;
         losses++;
-        var otherPlayerNum = playerNum ==1 ? 2:1;
+        // showResults(results);
+        var otherPlayerNum = playerNum == 1 ? 2:1;
         $('.choices' + otherPlayerNum + ' > img').css('opacity','0.5');
         window.setTimeout(function() {
           playersRef.child(playerNum).update({
@@ -271,15 +290,23 @@ $(document).on('ready', function() {
         }, 500);
       }
       window.setTimeout(function() {
-        console.log('css Animation step1');
+        console.log('CSS Animation Step 1');
         $('.results').text(results).css('z-index','1');
       }, 500);
+      // window.clearTimeout(function() {
+      //     console.log('CSS Animation Step 2');
+      //     turnRef.set(1);
+      //     $('.results').text('').css('z-index','-1');
+      // });
       window.setTimeout(function() {
-        console.log('css Animation step2');
+        console.log('CSS Animation Step 2');
         turnRef.set(1);
         $('.results').text('').css('z-index','-1');
       }, 2000);
     },
+    // showResults:function(results){
+    //   $('.results').text(results).css('z-index','1');
+    // },
     choiceAnimation:function() {
       console.log('choiceAnimation function firing');
       var $choice1 = $('.choices1 > img');
