@@ -16,6 +16,7 @@ $(document).on('ready', function() {
   var playersRef = database.ref("/playersRef");
   var turnRef = database.ref("/turn");
   var chatRef = database.ref("/chat");
+  var results = database.ref("/results");
   // Initialize variables
   var player;
   var otherPlayer;
@@ -38,7 +39,6 @@ $(document).on('ready', function() {
         if (snapshot.val()) {
           var con = presenceNumRef.push(true);
           con.onDisconnect().remove();
-          console.log(con);
         }
       });
       presenceNumRef.on('value', function(snapshot){
@@ -135,9 +135,9 @@ $(document).on('ready', function() {
       console.log('addPlayer function firing');
       var playerName = $("#name-input").val();
       var name_form = $("#name-form");
-      var name_panel = $(".name-panel");
+      var name_panel = $(".name-panel>span");
       name_panel.empty();
-      name_panel.html("<h6>Instructions</h6>");
+      name_panel.text("Instructions");
       name_form.empty();
       name_form.html("<h4>Time to Play</h4>");
       userRef = playersRef.child(count);
@@ -293,11 +293,6 @@ $(document).on('ready', function() {
         console.log('CSS Animation Step 1');
         $('.results').text(results).css('z-index','1');
       }, 500);
-      // window.clearTimeout(function() {
-      //     console.log('CSS Animation Step 2');
-      //     turnRef.set(1);
-      //     $('.results').text('').css('z-index','-1');
-      // });
       window.setTimeout(function() {
         console.log('CSS Animation Step 2');
         turnRef.set(1);
@@ -328,8 +323,23 @@ $(document).on('ready', function() {
   var chat = {
     message:"",
     getMessage:"",
-    sendMessage:"",
+    sendMessage: function() {
+      $('.message_submit').on('click', function(event) {
+        event.preventDefault();
+        var message = $('.message_input').val();
+        chatRef.push(message);
+        $('.message_input').val('');
+      });
+      chat.showMessage();
+    },
     sendDisconnect:"",
-    showMessage:""
+    showMessage: function() {
+      chatRef.on('child_added', function(childSnapshot, prevChildKey) {
+        var message_list = childSnapshot.val();
+        $('.message_body').append(message_list + '<br>')
+      });
+    },
   };
+
+  chat.sendMessage();
 })
