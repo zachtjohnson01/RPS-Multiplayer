@@ -8,8 +8,28 @@
 </head>
 <body>
     <div class='container'>
+            <div>
+
+                <!-- Nav tabs -->
+                <table class="pull-right">
+                    <tr>
+                        <td>
+                            <div class='pull-right' id="watchers"></div>
+                        </td>
+                        <td>&nbsp</td>
+                        <td>
+                            <img class='pull-right' src='assets/images/viewers.gif'>
+                        </td>
+                        <td>&nbsp</td>
+                    </tr>
+                </table>
+
+            </div>
+
+
         <div class="jumbotron">
             <h1 class="text-center">Rock Paper Scissors</h1>
+
         </div>
 
         <div class="row">
@@ -18,17 +38,24 @@
                     <div class="panel-heading">
                         <div class="panel-title name-panel">
                             <span class='d-print-inline'>Your Team Name</span>
-                            <div class='pull-right' id="watchers"></div>
-                            <div class='pull-right'>&nbsp</div>
-                            <img class='pull-right' src='assets/images/viewers.gif'>
                         </div>
                     </div>
-                    <div class="panel-body text-center">
+                    <!-- <div class="panel-body text-center">
                         <form id="name-form">
                                 <input type="text" id="name-input">
                                 <input id="submit-name" type="submit" value="Submit"  class="btn btn-primary">
                         </form>
-                    </div>
+                    </div> -->
+                    <form class="text-center name-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="name-input" placeholder="Team Name">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-primary" id="submit-name" type="submit">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -78,10 +105,15 @@
                     <div class="panel-body message_body">
                     </div>
                 </div>
-                <form>
-                    <input type="text" class="form-control message_input">
-                    <br>    
-                    <button class="form-control btn btn-primary message_submit" type="submit">Submit</button>
+                <form class="text-center">
+                    <div class="input-group">
+                        <input type="text" class="form-control message_input" placeholder="Message">
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary message_submit" type="submit">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

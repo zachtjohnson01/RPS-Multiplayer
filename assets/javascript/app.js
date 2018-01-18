@@ -17,6 +17,7 @@ $(document).on('ready', function() {
   var turnRef = database.ref("/turn");
   var chatRef = database.ref("/chat");
   var results = database.ref("/results");
+  var winnerRef = database.ref("/winner");
   // Initialize variables
   var player;
   var otherPlayer;
@@ -31,6 +32,7 @@ $(document).on('ready', function() {
   // Remove turn and chat if either player disconnects
   turnRef.onDisconnect().remove();
   chatRef.onDisconnect().remove();
+  winnerRef.onDisconnect().remove();
 
   var game = {
     listeners: function() {
@@ -112,7 +114,16 @@ $(document).on('ready', function() {
         };
         $('.score2 .pull-left').text('Wins: ' + wins2);
         $('.score2 .pull-right').text('Losses: ' + losses2);
-      })
+      });
+      winnerRef.on('value', function(snapshot) {
+          console.log('Results: ' + snapshot.val());
+          $('.results').text(snapshot.val()).css('z-index','1');
+        setTimeout(function() {
+          console.log('CSS Animation Step 2');
+          // turnRef.set(1);
+          $('.results').text('').css('z-index','-1');
+        }, 2000);
+        });
     },
     setPlayer: function() {
       console.log('setPlayer function firing');
@@ -136,7 +147,7 @@ $(document).on('ready', function() {
     addPlayer: function(count) {
       console.log('addPlayer function firing');
       var playerName = $("#name-input").val();
-      var name_form = $("#name-form");
+      var name_form = $(".name-form");
       var name_panel = $(".name-panel>span");
       name_panel.empty();
       name_panel.text("Instructions");
@@ -194,7 +205,6 @@ $(document).on('ready', function() {
       })
 
     },
-    rotateChoice:"",
     turn1: function() {
       console.log('turn1 function firing');
       game.turnMessage(1);
@@ -282,24 +292,37 @@ $(document).on('ready', function() {
         // showResults(results);
         var otherPlayerNum = playerNum == 1 ? 2:1;
         $('.choices' + otherPlayerNum + ' > img').css('opacity','0.5');
-        window.setTimeout(function() {
-          playersRef.child(playerNum).update({
-            'wins': wins
-          });
-          playersRef.child(otherPlayerNum).update({
-            'losses': losses
-          });
-        }, 500);
-      }
-      window.setTimeout(function() {
-        console.log('CSS Animation Step 1');
-        $('.results').text(results).css('z-index','1');
-      }, 500);
-      window.setTimeout(function() {
-        console.log('CSS Animation Step 2');
-        turnRef.set(1);
-        $('.results').text('').css('z-index','-1');
-      }, 2000);
+        playersRef.child(playerNum).update({
+          'wins': wins
+        });
+        playersRef.child(otherPlayerNum).update({
+          'losses': losses
+        });
+        winnerRef.set(results);
+        setTimeout(function() {
+          turnRef.set(1);
+        },2000);
+        // turnRef.set(1);
+
+        // window.setTimeout(function() {
+        //   playersRef.child(playerNum).update({
+        //     'wins': wins
+        //   });
+        //   playersRef.child(otherPlayerNum).update({
+        //     'losses': losses
+        //   });
+        // }, 500);
+      };
+
+      // setTimeout(function() {
+      //   console.log('CSS Animation Step 1');
+      //   $('.results').text(results).css('z-index','1');
+      // }, 500);
+      // setTimeout(function() {
+      //   console.log('CSS Animation Step 2');
+      //   turnRef.set(1);
+      //   $('.results').text('').css('z-index','1');
+      // }, 2000);
     },
     // showResults:function(results){
     //   $('.results').text(results).css('z-index','1');

@@ -83,11 +83,12 @@ body {
 }
 
 .rps-selection-panel {
-    height: 150px;
+    height: 175px;
 }
 
 .message_body {
-    height: 300px;
+    height: 150px;
+    overflow-y: scroll;
     overflow-wrap: break-word;
 }
 
