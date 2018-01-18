@@ -326,8 +326,9 @@ $(document).on('ready', function() {
     sendMessage: function() {
       $('.message_submit').on('click', function(event) {
         event.preventDefault();
+        var username = name[player];
         var message = $('.message_input').val();
-        chatRef.push(message);
+        chatRef.push(username + ": " + message);
         $('.message_input').val('');
       });
       chat.showMessage();
