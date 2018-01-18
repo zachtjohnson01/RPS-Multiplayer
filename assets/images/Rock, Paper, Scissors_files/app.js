@@ -343,7 +343,7 @@ $(document).on('ready', function() {
     showMessage: function() {
       chatRef.on('child_added', function(childSnapshot, prevChildKey) {
         var message_list = childSnapshot.val();
-        $('.message_body').append('<p>' + message_list + "</p>")
+        $('.message_body').append(message_list + '<br>')
       });
     },
   };

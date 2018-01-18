@@ -87,8 +87,7 @@ body {
 }
 
 .message_body {
-    height: 300px;
-    overflow-wrap: break-word;
+    max-height: 300px;
 }
 
 img {
